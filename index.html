@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Aritmeta">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aritmeta: Miles de caminos... ¿puedes llegar a la meta?</title>
@@ -369,8 +375,8 @@ input,select{width:100%;border:1px solid #cbd5e1;border-radius:16px;padding:12px
       <div class="aritmeta-subtitle">Miles de caminos…<br>¿puedes llegar a la meta?</div>
     </div>
 
-    <h1 class="title">Aritmeta</h1>
-    <p class="subtitle">Un juego con miles de caminos…<br>¿puedes llegar a la meta?</p>
+    <h1 class="title">Aritmeta: Miles de caminos... ¿puedes llegar a la meta?</h1>
+    <p class="subtitle">Explora miles de caminos…<br>¿puedes encontrar uno a la meta?</p>
     <div class="card start-card">
       <h2 class="section-title"></h2>
       <div class="mode-grid">
@@ -6220,6 +6226,14 @@ body{
   color:#2f5fb3 !important;
 }
 </style>
+
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js");
+    });
+  }
+</script>
 
 </body>
 </html>
