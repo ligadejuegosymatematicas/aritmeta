@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aritmeta</title>
+<title>Un juego con miles de caminos</title>
 <style>
 :root{
   --bg:#fff8f1; --card:#fff; --ink:#1f2937; --muted:#6b7280; --line:#e5e7eb;
@@ -369,16 +369,16 @@ input,select{width:100%;border:1px solid #cbd5e1;border-radius:16px;padding:12px
       <div class="aritmeta-subtitle">Miles de caminos…<br>¿puedes llegar a la meta?</div>
     </div>
 
-    <h1 class="title">Aritmeta</h1>
+    <h1 class="title">Un juego con miles de caminos</h1>
     <p class="subtitle">Explora miles de caminos…<br>¿puedes encontrar uno a la meta?</p>
     <div class="card start-card">
       <h2 class="section-title"></h2>
       <div class="mode-grid">
         <div class="mode-item">
-          <button class="mode preset" data-mode="preset">🧩 Desafíos preparados<small>Elige uno y trata de encontrar un camino a la meta.</small></button>
+          <button class="mode preset" data-mode="preset">🧩 Desafíos preparados<small>Elige uno y encuentra un camino a la meta.</small></button>
           <div id="presetFields" class="hidden">
         <div class="field">
-          <div style="color:#6b7280; font-size:14px; margin:0 0 8px 0;">Meta y números iniciales definidos.</div>
+          <div style="color:#6b7280; font-size:14px; margin:0 0 8px 0;"><span class="config-label">Meta</span> y números iniciales definidos.</div>
           <select id="presetSelect"></select>
         </div>
       </div>
@@ -386,27 +386,27 @@ input,select{width:100%;border:1px solid #cbd5e1;border-radius:16px;padding:12px
       
         </div>
         <div class="mode-item">
-          <button class="mode random" data-mode="random">🎲 Meta aleatoria<small>La meta se elegirá según los números iniciales que escribas.</small></button>
+          <button class="mode random" data-mode="random">🎲 Meta aleatoria<small>La meta es dada según tus números iniciales.</small></button>
           <div id="randomFields" class="hidden">
         <div class="field">
-          <label for="randomNums">Números iniciales (2 a 6 valores)</label>
-          <input id="randomNums" placeholder="Ej: 1,2,3,4,5,6">
+          <label for="randomNums"><span class="config-label">Números iniciales (2 a 6 valores)</span></label>
+          <input id="randomNums" placeholder="Ej: 3,14,159,26,5,35">
         </div>
       </div>
 
       
         </div>
         <div class="mode-item">
-          <button class="mode custom" data-mode="custom">⚙️ Partida personalizada<small>Podrás definir una meta y números iniciales libremente.</small></button>
+          <button class="mode custom" data-mode="custom">⚙️ Partida personalizada<small>Define una meta y números iniciales libremente.</small></button>
           <div id="customFields" class="compact-custom-fields hidden">
         <div class="custom-fields-row">
 <div class="field">
-          <label for="customMeta">Meta</label>
-          <input id="customMeta" type="number" min="1" max="999" placeholder="Ej: 283">
+          <label for="customMeta"><span class="config-label">Meta</span></label>
+          <input id="customMeta" type="number" min="1" max="999" placeholder="Ej: 28">
         </div>
         <div class="field">
-          <label for="customNums">Números iniciales (2 a 6 valores)</label>
-          <input id="customNums" placeholder="Ej: 1,2,3,4,5,6">
+          <label for="customNums"><span class="config-label">Números iniciales (2 a 6 valores)</span></label>
+          <input id="customNums" placeholder="Ej: 1,1,2,3,5,8">
         </div>
 </div>
       </div>
@@ -416,7 +416,11 @@ input,select{width:100%;border:1px solid #cbd5e1;border-radius:16px;padding:12px
       </div>
 
       <div class="actions">
-        <button id="startBtn" class="btn btn-start"><span class="start-label" style="font-weight:900">▶ Comenzar</span><span class="loading-label"><span class="spinner"></span>Preparando partida ⌛...</span></button>
+        <div class="config-block" id="configBlock"></div>
+
+<div class="start-helper">Selecciona un modo para comenzar</div>
+
+<button id="startBtn" class="start-btn disabled" class="btn btn-start"><span class="start-label" style="font-weight:900">▶ Comenzar</span><span class="loading-label"><span class="spinner"></span>Preparando partida ⌛...</span></button>
               </div>
       <div id="startMsg" class="message info hidden"></div>
     </div>
@@ -439,7 +443,7 @@ input,select{width:100%;border:1px solid #cbd5e1;border-radius:16px;padding:12px
         <div class="top-actions">
           <button id="helpBtn" class="btn subtle-btn">❓ ¿Cómo se juega?</button>
           <button id="backBtn" class="btn btn-secondary">⬅️ Inicio</button>
-          <button id="desktopShareBtn" class="btn btn-purple">Compartir partida</button>
+          <button id="desktopShareBtn" class="btn btn-purple">🔗 Compartir partida</button>
         </div>
         <div id="desktopShareToast" class="desktop-share-toast">✅ Enlace copiado</div>
 
@@ -485,7 +489,7 @@ input,select{width:100%;border:1px solid #cbd5e1;border-radius:16px;padding:12px
     </div>
 
     <div id="shareCard" class="card share-card" style="margin-top:18px;">
-      <h2 class="section-title">Compartir partida</h2>
+      <h2 class="section-title">🔗 Compartir partida</h2>
       <button id="shareGameBtn" class="btn btn-purple">🔗 Copiar enlace de la partida</button>
       <div id="shareLinkBox" class="message info hidden" style="margin-top:14px;"></div>
     </div>
@@ -494,11 +498,14 @@ input,select{width:100%;border:1px solid #cbd5e1;border-radius:16px;padding:12px
 
 <script>
 const PRESETS = [
-  { nums:[92,89,14,5,4,2], meta:420, totalPaths:1223142, metaTotal:639 },
-  { nums:[26,10,4], meta:64, totalPaths:40, metaTotal:1 },
-  { nums:[7,5,3,3,2,1], meta:945, totalPaths:628451, metaTotal:131 },
-  { nums:[13,11,7,5,3,2], meta:883, totalPaths:937229, metaTotal:2 },
-  { nums:[6,5,4,3,2,1], meta:278, totalPaths:1252216, metaTotal:1 }
+  { nums:[26,10,4], meta:64 },
+  { nums:[3,1,1,1,1,1], meta:18 },
+  { nums:[6,5,4,3,2,1], meta:1080 },
+  { nums:[92,89,14,5,4,2], meta:420 },
+  { nums:[100,75,50,25,5,3], meta:687 },
+  { nums:[13,11,7,5,3,2], meta:883 },
+  { nums:[13,11,7,5,3,2], meta:997 },
+  { nums:[6,5,4,3,2,1], meta:278 }
 ];
 let mode = null;
 const st = {
@@ -569,6 +576,24 @@ function resetStartScreen(){
   if(document.getElementById("randomNums")) document.getElementById("randomNums").value = '';
   if(document.getElementById("customMeta")) document.getElementById("customMeta").value = '';
   if(document.getElementById("customNums")) document.getElementById("customNums").value = '';
+
+  const configBlock = document.getElementById("configBlock");
+  if(configBlock){
+    configBlock.classList.remove("active");
+    configBlock.innerHTML = "";
+  }
+
+  const helper = document.querySelector(".start-helper");
+  if(helper){
+    helper.textContent = "Selecciona un modo para comenzar";
+    helper.classList.remove("ready");
+  }
+
+  const startBtn = document.getElementById("startBtn");
+  if(startBtn){
+    startBtn.classList.add("disabled");
+    startBtn.disabled = true;
+  }
 }
 
 function scrollStartFocus(targetSelector=null){
@@ -908,16 +933,33 @@ function maybeExecute(){
       st.won = true;
       clearMove();
       renderGame();
-      let msg = '<div style="display:block; width:100%; text-align:center;"><div style="font-size:28px; font-weight:900;">🎉 ¡Felicitaciones, ganaste!</div>';
+      let msg = '<div style="display:block; width:100%; text-align:center; line-height:1.35;">' +
+      '<div style="font-size:28px; font-weight:900; margin-bottom:8px;">🎉 ¡Felicitaciones, ganaste!</div>';
+
       if(st.counts){
         const aMeta = st.counts.metaTotal;
         const tot = st.counts.totalPaths;
+
         if(aMeta === 1){
-          msg += `<div style="font-size:16px; font-weight:700; margin-top:8px;">Encontraste el único camino que llega a la meta, de <b>${tot.toLocaleString('es-CL')}</b> posibles.</div>`;
-        } else {
-          msg += `<div style="font-size:16px; font-weight:700; margin-top:8px;">Encontraste un camino entre <b>${aMeta.toLocaleString('es-CL')}</b> que llegan a la meta, de <b>${tot.toLocaleString('es-CL')}</b> posibles.</div>`;
-        }
+        msg += `<div style="font-size:19px; font-weight:800; margin-top:8px;">
+        🎯 Único camino a la meta
+        </div>`;
+      } else {
+        msg += `<div style="font-size:19px; font-weight:800; margin-top:8px;">
+        🎯 1 de ${aMeta.toLocaleString('es-CL')} caminos a la meta
+        </div>`;
       }
+
+        msg += `<div style="font-size:14px; font-weight:500; margin-top:4px; opacity:.92;">
+        🔢 Total: ${tot.toLocaleString('es-CL')} caminos
+        </div>`;
+      }
+
+      msg += `<div style="margin-top:14px; font-size:14px; font-weight:500; opacity:.95;">
+      <span style="cursor:pointer; text-decoration:underline;" onclick="document.getElementById('backBtn')?.click()">⬅️ Inicio</span>&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;
+<span style="cursor:pointer; text-decoration:underline;" onclick="window.shareCurrentGameFrom && window.shareCurrentGameFrom(this)">🔗 Compartir partida</span>
+      </div>`;
+
       msg += '</div>';
       animateOnce('.meta','animate-goal');
       msgPlay(msg,'success', true);
@@ -1037,7 +1079,7 @@ $("#restartBtn").addEventListener('click', ()=>{
     if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
   }, 260);
 });
-$("#backBtn").addEventListener('click', ()=>{ const shareLinkBox=$("#shareLinkBox"); if(shareLinkBox){ shareLinkBox.textContent=""; shareLinkBox.classList.add("hidden"); } $("#gameScreen").classList.remove('active'); $("#startScreen").classList.add('active'); resetStartScreen(); });
+$("#backBtn").addEventListener('click', ()=>{ const shareLinkBox=$("#shareLinkBox"); if(shareLinkBox){ shareLinkBox.textContent=""; shareLinkBox.classList.add("hidden"); } $("#gameScreen").classList.remove('active'); $("#startScreen").classList.add('active'); resetStartScreen(); window.scrollTo(0,0); });
 
 function transitionToGame(){
   const startScreen = $("#startScreen");
@@ -3464,7 +3506,7 @@ window.addEventListener('load', ()=>{
   flex-wrap:nowrap !important;
 }
 .compact-custom-fields .custom-fields-row > .field{
-  min-width:0 !important;
+  min-width:100px !important;
   margin-bottom:0 !important;
 }
 .compact-custom-fields .custom-fields-row > .field:first-child{
@@ -3901,35 +3943,30 @@ window.addEventListener('load', ()=>{
 
 
 <style>
-/* v121_step4: desktop share toast */
+/* v121_step4: share toast near trigger on any viewport */
 .desktop-share-toast{
   display:none;
+  position:fixed;
+  top:72px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(255,255,255,.96);
+  color:#111827;
+  border:1px solid #dbe4ee;
+  border-radius:14px;
+  box-shadow:0 14px 26px rgba(15,23,42,.12);
+  padding:10px 16px;
+  font-weight:700;
+  z-index:20;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .18s ease, transform .18s ease;
+  white-space:normal; word-break:break-word; text-align:center; max-width:90vw;
 }
-
-@media (min-width: 1100px){
-  .desktop-share-toast{
-    position:absolute;
-    top:72px;
-    left:50%;
-    transform:translateX(-50%);
-    background:rgba(255,255,255,.96);
-    color:#111827;
-    border:1px solid #dbe4ee;
-    border-radius:14px;
-    box-shadow:0 14px 26px rgba(15,23,42,.12);
-    padding:10px 16px;
-    font-weight:700;
-    z-index:20;
-    pointer-events:none;
-    opacity:0;
-    transition:opacity .18s ease, transform .18s ease;
-    white-space:nowrap;
-  }
-  .desktop-share-toast.show{
-    display:block;
-    opacity:1;
-    transform:translateX(-50%) translateY(0);
-  }
+.desktop-share-toast.show{
+  display:block;
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
 }
 </style>
 
@@ -3941,9 +3978,37 @@ window.addEventListener('load', ()=>{
     const desktopShareToast = document.getElementById('desktopShareToast');
     let toastTimer = null;
 
-    function showDesktopShareToast(text){
+    function showDesktopShareToast(text, anchorEl){
       if(!desktopShareToast) return;
       desktopShareToast.textContent = text;
+
+      if(anchorEl){
+        const r = anchorEl.getBoundingClientRect();
+        const toastWidth = Math.min(320, window.innerWidth - 24);
+        let left = r.left + r.width / 2;
+        let top = r.bottom + 10;
+
+        // if there is not enough room below, show above
+        if(top + 64 > window.innerHeight){
+          top = Math.max(12, r.top - 58);
+        }
+
+        // keep inside viewport
+        const minLeft = 12 + toastWidth / 2;
+        const maxLeft = window.innerWidth - 12 - toastWidth / 2;
+        left = Math.max(minLeft, Math.min(maxLeft, left));
+
+        desktopShareToast.style.left = Math.round(left) + 'px';
+        desktopShareToast.style.top = Math.round(top) + 'px';
+        desktopShareToast.style.transform = 'translateX(-50%)';
+        desktopShareToast.style.maxWidth = toastWidth + 'px';
+      }else{
+        desktopShareToast.style.left = '50%';
+        desktopShareToast.style.top = '72px';
+        desktopShareToast.style.transform = 'translateX(-50%)';
+        desktopShareToast.style.maxWidth = '';
+      }
+
       desktopShareToast.classList.add('show');
       if(toastTimer) clearTimeout(toastTimer);
       toastTimer = setTimeout(()=>{
@@ -3951,16 +4016,24 @@ window.addEventListener('load', ()=>{
       }, 1700);
     }
 
+    function copyCurrentGameLink(anchorEl){
+      const cfg={mode:st.mode, nums:st.initial.join(','), meta:String(st.meta)};
+      const link=location.origin+location.pathname+'?'+new URLSearchParams(cfg).toString();
+      navigator.clipboard.writeText(link).then(()=>{
+        showDesktopShareToast('✅ Enlace copiado', anchorEl);
+      }).catch(()=>{
+        showDesktopShareToast('⚠️ No se pudo copiar', anchorEl);
+      });
+    }
+
+    window.shareCurrentGameFrom = function(anchorEl){
+      copyCurrentGameLink(anchorEl);
+    };
+
     if(desktopShareBtn){
       desktopShareBtn.addEventListener('click', ()=>{
         if(window.matchMedia('(min-width: 1100px)').matches){
-          const cfg={mode:st.mode, nums:st.initial.join(','), meta:String(st.meta)};
-          const link=location.origin+location.pathname+'?'+new URLSearchParams(cfg).toString();
-          navigator.clipboard.writeText(link).then(()=>{
-            showDesktopShareToast('✅ Enlace copiado');
-          }).catch(()=>{
-            showDesktopShareToast('⚠️ No se pudo copiar');
-          });
+          copyCurrentGameLink(desktopShareBtn);
         }
       });
     }
@@ -3969,40 +4042,7 @@ window.addEventListener('load', ()=>{
 </script>
 
 
-<style>
-/* v121_step4b: move share toast near share button */
-.desktop-share-toast{
-  display:none;
-}
 
-@media (min-width: 1100px){
-  .desktop-share-toast{
-    position:absolute !important;
-    top:70px !important;
-    right:20px !important;
-    left:auto !important;
-    background:rgba(255,255,255,.96) !important;
-    color:#111827 !important;
-    border:1px solid #dbe4ee !important;
-    border-radius:14px !important;
-    box-shadow:0 14px 26px rgba(15,23,42,.12) !important;
-    padding:10px 16px !important;
-    font-weight:700 !important;
-    z-index:20 !important;
-    pointer-events:none !important;
-    opacity:0 !important;
-    transform:translateY(-6px) !important;
-    transition:opacity .18s ease, transform .18s ease !important;
-    white-space:nowrap !important;
-  }
-
-  .desktop-share-toast.show{
-    display:block !important;
-    opacity:1 !important;
-    transform:translateY(0) !important;
-  }
-}
-</style>
 
 
 <div id="desktopHelpOverlayRoot"></div>
@@ -4673,7 +4713,7 @@ window.addEventListener('load', ()=>{
   opacity:0;
   transform:translateY(-6px);
   transition:opacity .18s ease, transform .18s ease;
-  white-space:nowrap;
+  white-space:normal; word-break:break-word; text-align:center; max-width:90vw;
 }
 
 .desktop-share-toast.show{
@@ -5515,6 +5555,669 @@ window.addEventListener('load', ()=>{
   .main-card, .menu-container{
     margin-top: 18px !important;
   }
+}
+</style>
+
+
+<style>
+/* v157: modern app palette for initial screen */
+
+#startScreen .card,
+#startScreen .main-card,
+#startScreen .menu-card,
+#startScreen .panel,
+#startScreen .start-card{
+  background: rgba(252, 249, 244, 0.88) !important;
+  border: 1px solid rgba(47, 111, 190, 0.08) !important;
+  box-shadow: 0 14px 34px rgba(31, 41, 55, 0.08) !important;
+}
+
+#startScreen .mode-card,
+#startScreen .mode-option,
+#startScreen .choice-card{
+  background: rgba(255,255,255,0.58) !important;
+  border: 1px solid rgba(47, 111, 190, 0.10) !important;
+  box-shadow: 0 8px 18px rgba(31, 41, 55, 0.04) !important;
+}
+
+#startScreen .mode-card h3,
+#startScreen .mode-option h3,
+#startScreen .choice-card h3,
+#startScreen .mode-card .title,
+#startScreen .mode-option .title,
+#startScreen .choice-card .title{
+  color: #18233b !important;
+}
+
+#startScreen .mode-card p,
+#startScreen .mode-option p,
+#startScreen .choice-card p,
+#startScreen .mode-card .desc,
+#startScreen .mode-option .desc,
+#startScreen .choice-card .desc{
+  color: rgba(55, 65, 81, 0.72) !important;
+}
+
+#startScreen #startBtn,
+#startScreen .start-btn{
+  background: linear-gradient(180deg, #f7a73a 0%, #f28c22 100%) !important;
+  color: #5a2200 !important;
+  border: 1px solid rgba(186, 93, 16, 0.18) !important;
+  box-shadow: 0 10px 22px rgba(242, 140, 34, 0.20) !important;
+}
+
+#startScreen #startBtn *,
+#startScreen .start-btn *{
+  color: inherit !important;
+}
+
+.aritmeta-subtitle{
+  color: rgba(31, 41, 55, 0.78) !important;
+}
+
+.liga-handle{
+  color: rgba(55, 65, 81, 0.56) !important;
+}
+</style>
+
+
+<style>
+/* v158: modern controlled color system */
+
+/* unified card base */
+#startScreen .mode-card,
+#startScreen .mode-option,
+#startScreen .choice-card{
+  border-radius: 18px !important;
+  border: 1px solid rgba(47,111,190,0.12) !important;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.05) !important;
+}
+
+/* controlled color variations (same hue) */
+#startScreen .mode-card:nth-of-type(1){
+  background: rgba(47,111,190,0.10) !important;
+}
+
+#startScreen .mode-card:nth-of-type(2){
+  background: rgba(47,111,190,0.14) !important;
+}
+
+#startScreen .mode-card:nth-of-type(3){
+  background: rgba(47,111,190,0.18) !important;
+}
+
+/* titles hierarchy */
+#startScreen h1, 
+#startScreen h2, 
+#startScreen .title{
+  color: #0f1b2d !important;
+  font-weight: 600 !important;
+}
+
+/* descriptions softer */
+#startScreen p,
+#startScreen .desc{
+  color: rgba(31,41,55,0.65) !important;
+}
+
+/* start button refined */
+#startScreen #startBtn,
+#startScreen .start-btn{
+  background: linear-gradient(180deg, #f6a23a 0%, #f28c22 100%) !important;
+  color: #4a1f00 !important;
+  border: none !important;
+  box-shadow: 0 6px 14px rgba(242,140,34,0.25) !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* slightly reduce dominance */
+#startScreen #startBtn{
+  transform: scale(0.98);
+}
+
+/* subtle hover (desktop only) */
+@media (min-width:701px){
+  #startScreen #startBtn:hover{
+    transform: scale(1.01);
+    box-shadow: 0 10px 22px rgba(242,140,34,0.30);
+  }
+}
+
+/* subtitle refinement */
+.aritmeta-subtitle{
+  font-weight: 500 !important;
+  color: rgba(15,27,45,0.75) !important;
+}
+
+/* background softer */
+body{
+  background-blend-mode: soft-light;
+}
+
+/* liga block subtle */
+.liga-block{
+  opacity: 0.92;
+}
+</style>
+
+
+<style>
+/* v159: fix real mode button colors from HTML */
+
+.mode{
+  border: 1px solid rgba(47,111,190,0.10) !important;
+  box-shadow: 0 8px 18px rgba(15,23,42,0.05) !important;
+  color: #18233b !important;
+}
+
+/* one controlled hue, only changing intensity */
+.mode.preset{
+  background: rgba(47,111,190,0.10) !important;
+}
+
+.mode.random{
+  background: rgba(47,111,190,0.14) !important;
+}
+
+.mode.custom{
+  background: rgba(47,111,190,0.18) !important;
+}
+
+.mode small{
+  color: rgba(55,65,81,0.72) !important;
+}
+
+/* keep start card neutral */
+.start-card{
+  background: linear-gradient(180deg, rgba(255,249,242,0.90) 0, rgba(255,252,247,0.86) 100%) !important;
+}
+
+/* slightly tone down button dominance */
+#startScreen #startBtn,
+#startScreen .start-btn{
+  box-shadow: 0 8px 18px rgba(242,140,34,0.20) !important;
+}
+</style>
+
+
+<style>
+/* v160: cleaner branded blue cards */
+
+.mode{
+  color: #1e2a44 !important;
+}
+
+.mode small{
+  color: #5b6475 !important;
+}
+
+.mode.preset{
+  background: #e8f1fb !important;
+}
+
+.mode.random{
+  background: #e3eefb !important;
+}
+
+.mode.custom{
+  background: #ddeafb !important;
+}
+
+.mode{
+  border: 1px solid rgba(47,111,190,0.12) !important;
+  box-shadow: 0 8px 18px rgba(15,23,42,0.05) !important;
+}
+</style>
+
+
+<style>
+/* v160b: visual rebuild on top of stable v160 base */
+/* only visual changes; no viewport/body/screen/overflow/height edits */
+
+/* cleaner blue system for mode cards */
+.mode{
+  color:#1e2a44 !important;
+  border:1px solid rgba(47,111,190,.12) !important;
+  box-shadow:0 8px 18px rgba(15,23,42,.05) !important;
+}
+.mode small{
+  color:#5b6475 !important;
+}
+.mode.preset{ background:#f3f7fd !important; }
+.mode.random{ background:#f5f8fe !important; }
+.mode.custom{ background:#f7faff !important; }
+
+/* subtle identity bar */
+.mode.preset{ border-left:4px solid rgba(47,111,190,.70) !important; }
+.mode.random{ border-left:4px solid rgba(106,163,230,.70) !important; }
+.mode.custom{ border-left:4px solid rgba(168,199,240,.85) !important; }
+
+/* selected state in branded blue */
+.mode.active{
+  border:2px solid #2f6fbe !important;
+  box-shadow:
+    0 0 0 2px rgba(47,111,190,.10),
+    0 8px 18px rgba(47,111,190,.12) !important;
+  transform:none !important;
+}
+.mode-item.selected{
+  border-color:#2f6fbe !important;
+  box-shadow:
+    0 0 0 2px rgba(47,111,190,.08),
+    0 6px 14px rgba(47,111,190,.10) !important;
+}
+
+/* dim others less */
+.mode-grid.has-selection .mode:not(.active),
+.mode-grid.has-selection .mode-item:not(.selected){
+  opacity:.84 !important;
+  filter:none !important;
+  transform:none !important;
+}
+
+/* expanded panels neutral blue */
+.mode-item.preset.selected #presetFields,
+.mode-item.preset.selected #presetFields .field,
+.mode-item.random.selected #randomFields,
+.mode-item.random.selected #randomFields .field,
+.mode-item.custom.selected #customFields,
+.mode-item.custom.selected #customFields .field{
+  background:#f7faff !important;
+}
+.mode-item.selected > .mode,
+.mode-item.selected > .mode *,
+.mode-item.selected > .mode small{
+  color:#18233b !important;
+  opacity:1 !important;
+  filter:none !important;
+}
+.mode-item.selected select,
+.mode-item.selected input{
+  background:rgba(255,255,255,.94) !important;
+  border:1px solid rgba(47,111,190,.14) !important;
+  box-shadow:none !important;
+}
+#presetFields,
+#randomFields,
+#customFields{
+  margin-top:10px !important;
+}
+
+/* start button aligned with Aritmeta orange */
+#startScreen #startBtn,
+#startScreen .start-btn{
+  background:linear-gradient(180deg,#f6a23a 0%, #f28c22 100%) !important;
+  color:#4a1f00 !important;
+  border:none !important;
+  box-shadow:0 8px 18px rgba(242,140,34,.20) !important;
+  letter-spacing:.2px !important;
+}
+
+/* subtitle slightly more present */
+.aritmeta-subtitle{
+  font-weight:600 !important;
+  letter-spacing:-.15px !important;
+  color:rgba(15,27,45,.76) !important;
+}
+
+/* soften only the decorative start-screen graph */
+.graph-bg{
+  opacity:.14 !important;
+  filter:saturate(.65) !important;
+}
+.graph-bg svg{
+  stroke:#cbd5e1 !important;
+}
+.graph-bg .main,
+.graph-bg .branch,
+.graph-bg .cross{
+  stroke:#cbd5e1 !important;
+}
+.graph-bg .main-node,
+.graph-bg .node{
+  fill:#94a3b8 !important;
+}
+</style>
+
+
+<style>
+/* v160c: flow restructuring (no structural break) */
+
+/* header helper text */
+.start-instruction{
+  text-align:center;
+  margin-top:6px;
+  margin-bottom:14px;
+  font-weight:600;
+  color:#2a3a55;
+}
+
+/* recommendation badge */
+.mode.random::after{
+  content:"Recomendado";
+  position:absolute;
+  top:8px;
+  right:10px;
+  font-size:11px;
+  background:#2f6fbe;
+  color:white;
+  padding:2px 6px;
+  border-radius:6px;
+  opacity:.85;
+}
+
+/* configuration block (hidden initially) */
+.config-block{
+  margin-top:18px;
+  padding:14px;
+  border-radius:12px;
+  background:#f7faff;
+  border:1px solid rgba(47,111,190,.12);
+  display:none;
+}
+
+/* visible state */
+.config-block.active{
+  display:block;
+}
+
+/* helper text before button */
+.start-helper{
+  text-align:center;
+  font-size:13px;
+  margin-top:10px;
+  color:#6b7280;
+}
+
+/* disabled button state */
+.start-btn.disabled,
+#startBtn.disabled{
+  background:#cbd5e1 !important;
+  color:#64748b !important;
+  box-shadow:none !important;
+  pointer-events:none;
+}
+</style>
+
+
+<style>
+/* v160d: fix flow layout issues */
+
+/* keep mode cards as self-contained selectors */
+.mode{
+  position: relative !important;
+}
+
+/* recommended badge fixed inside random card only */
+.mode.random::after{
+  content:"Recomendado" !important;
+  position:absolute !important;
+  top:10px !important;
+  right:12px !important;
+  font-size:11px !important;
+  line-height:1 !important;
+  background:#4d84ca !important;
+  color:#fff !important;
+  padding:5px 8px !important;
+  border-radius:8px !important;
+  opacity:.96 !important;
+  z-index:2 !important;
+  pointer-events:none !important;
+}
+
+/* truly separate configuration block */
+.config-block{
+  margin-top:20px !important;
+  margin-bottom:16px !important;
+  padding:18px 16px !important;
+  border-radius:18px !important;
+  background:#f7faff !important;
+  border:1px solid rgba(47,111,190,.14) !important;
+  box-shadow:0 8px 18px rgba(15,23,42,.05) !important;
+  display:none !important;
+}
+.config-block.active{
+  display:block !important;
+}
+.config-title{
+  font-weight:800 !important;
+  font-size:16px !important;
+  color:#24344f !important;
+  margin-bottom:10px !important;
+}
+.config-block .field{
+  margin-bottom:0 !important;
+}
+
+/* avoid giant expanded selected wrapper look */
+.mode-item.selected{
+  box-shadow:none !important;
+  border-color:transparent !important;
+  background:transparent !important;
+}
+.mode-item.selected #presetFields,
+.mode-item.selected #randomFields,
+.mode-item.selected #customFields{
+  display:none !important;
+}
+
+/* selected card stronger but not oversized */
+.mode.active{
+  border:2px solid #2f6fbe !important;
+  box-shadow:0 0 0 2px rgba(47,111,190,.10), 0 8px 18px rgba(47,111,190,.12) !important;
+}
+
+/* helper above button */
+.start-helper{
+  text-align:center !important;
+  font-size:14px !important;
+  margin:6px 0 12px !important;
+  color:#6b7280 !important;
+  transition:color .15s ease, opacity .15s ease !important;
+}
+.start-helper.ready{
+  color:#4b5563 !important;
+}
+
+/* disabled button must LOOK disabled */
+#startBtn.disabled,
+.start-btn.disabled,
+#startBtn:disabled,
+.start-btn:disabled{
+  background:#cfd7e3 !important;
+  color:#6b7280 !important;
+  box-shadow:none !important;
+  cursor:not-allowed !important;
+  opacity:1 !important;
+  filter:none !important;
+  pointer-events:none !important;
+}
+#startBtn:not(.disabled),
+.start-btn:not(.disabled){
+  background:linear-gradient(180deg,#f6a23a 0%, #f28c22 100%) !important;
+  color:#4a1f00 !important;
+  box-shadow:0 8px 18px rgba(242,140,34,.20) !important;
+}
+
+/* spacing */
+.mode-grid{
+  margin-bottom:10px !important;
+}
+@media(max-width:700px){
+  .config-block{
+    padding:16px 14px !important;
+    margin-top:18px !important;
+    margin-bottom:14px !important;
+  }
+}
+</style>
+
+
+<script>
+(function(){
+  function $(sel){ return document.querySelector(sel); }
+  function $all(sel){ return Array.from(document.querySelectorAll(sel)); }
+
+  const configBlock = document.getElementById('configBlock');
+  const helper = document.querySelector('.start-helper');
+  const startBtn = document.getElementById('startBtn');
+
+  function setButtonState(){
+    if(!startBtn) return;
+    let mode = null;
+    const active = document.querySelector('.mode.active');
+    if(active){
+      if(active.classList.contains('preset')) mode = 'preset';
+      else if(active.classList.contains('random')) mode = 'random';
+      else if(active.classList.contains('custom')) mode = 'custom';
+    }
+
+    function countNums(value){
+      return String(value || '')
+        .split(/[\s,]+/)
+        .map(x => x.trim())
+        .filter(x => x !== '').length;
+    }
+
+    let ready = false;
+    if(mode === 'preset'){
+      const sel = document.getElementById('presetSelect') || document.querySelector('#presetFields select');
+      ready = !!(sel && sel.value);
+    }else if(mode === 'random'){
+      const inp = document.getElementById('randomNums') || document.querySelector('#randomFields input');
+      const n = countNums(inp ? inp.value : '');
+      ready = n >= 2 && n <= 6;
+    }else if(mode === 'custom'){
+      const meta = document.getElementById('customMeta') || document.querySelector('#customFields input');
+      const nums = document.getElementById('customNums') || document.querySelectorAll('#customFields input')[1];
+      const n = countNums(nums ? nums.value : '');
+      ready = !!(meta && String(meta.value || '').trim() !== '') && n >= 2 && n <= 6;
+    }
+
+    if(mode && ready){
+      startBtn.classList.remove('disabled');
+      startBtn.disabled = false;
+      if(helper){
+        helper.textContent = 'Todo listo para comenzar';
+        helper.classList.add('ready');
+      }
+    }else{
+      startBtn.classList.add('disabled');
+      startBtn.disabled = true;
+      if(helper){
+        helper.textContent = mode ? 'Completa la configuración para comenzar' : 'Selecciona un modo para comenzar';
+        helper.classList.remove('ready');
+      }
+    }
+  }
+
+  function getModeTitle(mode){
+    if(mode === 'preset') return 'Configura tu partida';
+    if(mode === 'random') return 'Configura tu partida';
+    if(mode === 'custom') return 'Configura tu partida';
+    return '';
+  }
+
+  function renderConfig(){
+    if(!configBlock) return;
+    let mode = null;
+    const active = document.querySelector('.mode.active');
+    if(active){
+      if(active.classList.contains('preset')) mode = 'preset';
+      else if(active.classList.contains('random')) mode = 'random';
+      else if(active.classList.contains('custom')) mode = 'custom';
+    }
+
+    if(!mode){
+      configBlock.classList.remove('active');
+      configBlock.innerHTML = '';
+      setButtonState();
+      return;
+    }
+
+    let source = null;
+    if(mode === 'preset') source = document.getElementById('presetFields') || document.querySelector('#presetFields');
+    if(mode === 'random') source = document.getElementById('randomFields') || document.querySelector('#randomFields');
+    if(mode === 'custom') source = document.getElementById('customFields') || document.querySelector('#customFields');
+
+    if(source){
+      const clone = source.cloneNode(true);
+      clone.style.display = 'block';
+      clone.id = clone.id ? clone.id + '_clone' : '';
+      clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+      configBlock.innerHTML = '<div class="config-title">'+getModeTitle(mode)+'</div>';
+      configBlock.appendChild(clone);
+      configBlock.classList.add('active');
+
+      // sync values from original -> clone on render
+      const originalInputs = source.querySelectorAll('input, select, textarea');
+      const cloneInputs = clone.querySelectorAll('input, select, textarea');
+      originalInputs.forEach((el, i) => {
+        if(cloneInputs[i]) cloneInputs[i].value = el.value;
+      });
+
+      // sync clone -> original
+      cloneInputs.forEach((el, i) => {
+        el.addEventListener('input', function(){
+          if(originalInputs[i]){
+            originalInputs[i].value = el.value;
+            originalInputs[i].dispatchEvent(new Event('input', {bubbles:true}));
+            originalInputs[i].dispatchEvent(new Event('change', {bubbles:true}));
+          }
+          setButtonState();
+        });
+        el.addEventListener('change', function(){
+          if(originalInputs[i]){
+            originalInputs[i].value = el.value;
+            originalInputs[i].dispatchEvent(new Event('input', {bubbles:true}));
+            originalInputs[i].dispatchEvent(new Event('change', {bubbles:true}));
+          }
+          setButtonState();
+        });
+      });
+    }
+
+    setButtonState();
+  }
+
+  // watch clicks on cards
+  document.addEventListener('click', function(e){
+    const mode = e.target.closest('.mode');
+    if(mode){
+      setTimeout(renderConfig, 0);
+    }
+  });
+
+  // watch original hidden fields too
+  ['presetFields','randomFields','customFields'].forEach(id=>{
+    const node = document.getElementById(id);
+    if(node){
+      node.addEventListener('input', setButtonState, true);
+      node.addEventListener('change', setButtonState, true);
+    }
+  });
+
+  window.addEventListener('load', function(){
+    renderConfig();
+    setButtonState();
+  });
+})();
+</script>
+
+
+<style>
+/* v160p: typography improvements */
+.config-label{
+  font-weight:400 !important;
+}
+
+.config-title{
+  font-weight:700 !important;
+}
+
+.start-helper.ready{
+  font-weight:700 !important;
+  color:#2f5fb3 !important;
 }
 </style>
 
